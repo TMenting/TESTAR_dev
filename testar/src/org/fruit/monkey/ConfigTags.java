@@ -122,6 +122,7 @@ public final class ConfigTags {
   public static final Tag<List<String>> AbstractStateAttributes = Tag.from("AbstractStateAttributes", (Class<List<String>>) (Class<?>) List.class);
 
   public static final Tag<Boolean> AlwaysCompile = Tag.from("AlwaysCompile", Boolean.class);
+  public static final Tag<Boolean> UseOCR = Tag.from("UseOCR", Boolean.class);
 
   public static final Tag<Boolean> ProcessListenerEnabled = Tag.from("ProcessListenerEnabled", Boolean.class);
   public static final Tag<String> SuspiciousProcessOutput = Tag.from("SuspiciousProcessOutput", String.class);

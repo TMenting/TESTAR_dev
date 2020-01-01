@@ -35,6 +35,14 @@ Sequences = 8
 SequenceLength = 10
 
 #################################################################
+# OCR
+#
+# Use OCR to validate that the text is completely visible
+#################################################################
+
+UseOCR = false
+
+#################################################################
 # Oracles based on suspicious titles
 #
 # Regular expression

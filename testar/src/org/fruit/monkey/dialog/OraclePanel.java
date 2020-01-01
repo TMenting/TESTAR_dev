@@ -38,7 +38,7 @@ import javax.swing.*;
 import static javax.swing.GroupLayout.DEFAULT_SIZE;
 import static javax.swing.GroupLayout.PREFERRED_SIZE;
 import static javax.swing.LayoutStyle.ComponentPlacement.RELATED;
-import static org.fruit.monkey.dialog.ToolTipTexts.suspiciousTitlesTTT;
+import static org.fruit.monkey.dialog.ToolTipTexts.*;
 
 public class OraclePanel extends JPanel {
 
@@ -48,6 +48,7 @@ public class OraclePanel extends JPanel {
 	private JCheckBox processCheckBox;
 	private JTextArea txtProcTitles;
 	private JSpinner spnFreezeTime;
+	private JCheckBox enableOCRCheckBox;
 
 	public OraclePanel() {
 		txtSuspTitles = new JTextArea();
@@ -75,6 +76,10 @@ public class OraclePanel extends JPanel {
 		JLabel freezeTimeLabel = new JLabel("Freeze Time:");
 		JLabel secondsLabel = new JLabel("seconds");
 
+		enableOCRCheckBox = new JCheckBox("Enable OCR");
+		enableOCRCheckBox.setBounds(10, 280, 150, 20);
+		enableOCRCheckBox.setToolTipText(enableOCRTTT);
+
 		GroupLayout gl_jPanelOracles = new GroupLayout(this);
 		this.setLayout(gl_jPanelOracles);
 		gl_jPanelOracles.setHorizontalGroup(
@@ -84,6 +89,9 @@ public class OraclePanel extends JPanel {
 						.addGroup(gl_jPanelOracles.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 								.addGroup(gl_jPanelOracles.createSequentialGroup()
 										.addGroup(gl_jPanelOracles.createParallelGroup(GroupLayout.Alignment.LEADING)
+												.addGroup(GroupLayout.Alignment.LEADING, gl_jPanelOracles.createSequentialGroup()
+														.addComponent(enableOCRCheckBox, PREFERRED_SIZE, 150, PREFERRED_SIZE)
+														.addGap(121))
 												.addGroup(gl_jPanelOracles.createSequentialGroup()
 														.addComponent(freezeTimeLabel, PREFERRED_SIZE, 92, PREFERRED_SIZE)
 														.addGap(10)
@@ -116,6 +124,8 @@ public class OraclePanel extends JPanel {
 								.addComponent(spnFreezeTime, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE)
 								.addComponent(secondsLabel)
 								.addComponent(freezeTimeLabel))
+						.addGap(20)
+						.addComponent(enableOCRCheckBox)
 						.addContainerGap(120, Short.MAX_VALUE))
 				.addGroup(gl_jPanelOracles.createSequentialGroup()
 						.addGap(160)
@@ -139,6 +149,7 @@ public class OraclePanel extends JPanel {
 		processCheckBox.setSelected(settings.get(ConfigTags.ProcessListenerEnabled));
 		txtProcTitles.setText(settings.get(ConfigTags.SuspiciousProcessOutput));
 		spnFreezeTime.setValue(settings.get(ConfigTags.TimeToFreeze));
+		enableOCRCheckBox.setSelected(settings.get(ConfigTags.UseOCR));
 	}
 
 	/**
@@ -150,5 +161,6 @@ public class OraclePanel extends JPanel {
 		settings.set(ConfigTags.ProcessListenerEnabled, processCheckBox.isSelected());
 		settings.set(ConfigTags.SuspiciousProcessOutput, txtProcTitles.getText());
 		settings.set(ConfigTags.TimeToFreeze, (Double) spnFreezeTime.getValue());
+		settings.set(ConfigTags.UseOCR, enableOCRCheckBox.isSelected());
 	}
 }

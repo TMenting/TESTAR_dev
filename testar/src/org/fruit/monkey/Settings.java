@@ -316,6 +316,14 @@ public class Settings extends TaggableBase implements Serializable {
 					+"SequenceLength = " + Util.lineSep()
 					+"\n"
 					+"#################################################################\n"
+					+"# OCR\n"
+					+"#\n"
+					+"# Use OCR to validate that the text is completely visible\n"
+					+"#################################################################\n"
+					+"\n"
+					+"UseOCR = " + Util.lineSep()
+					+"\n"
+					+"#################################################################\n"
 					+"# Oracles based on suspicious titles\n"
 					+"#\n"
 					+"# Regular expression\n"
