@@ -66,8 +66,10 @@ import javax.swing.JOptionPane;
 
 import es.upv.staq.testar.*;
 import nl.ou.testar.*;
+import nl.ou.testar.OCR.OcrController;
 import nl.ou.testar.StateModel.StateModelManager;
 import nl.ou.testar.StateModel.StateModelManagerFactory;
+import org.bytedeco.opencv.opencv_tracking.ClfOnlineStump;
 import org.fruit.Assert;
 import org.fruit.Drag;
 import org.fruit.Pair;
@@ -194,6 +196,8 @@ public class DefaultProtocol extends RuntimeControlsProtocol {
 
 	protected StateModelManager stateModelManager;
 	private String startOfSutDateString; //value set when SUT started, used for calculating the duration of test
+
+	protected OcrController ocrController;
 
 	protected final static Pen RedPen = Pen.newPen().setColor(Color.Red).
 			setFillPattern(FillPattern.None).setStrokePattern(StrokePattern.Solid).build(),
@@ -368,6 +372,11 @@ public class DefaultProtocol extends RuntimeControlsProtocol {
 
 			// new state model manager
 			stateModelManager = StateModelManagerFactory.getStateModelManager(settings);
+
+			if (settings.get(ConfigTags.UseOCR)){
+				ocrController = new OcrController();
+				ocrController.Create();
+			}
 		}
 
 		try {
@@ -1566,7 +1575,27 @@ public class DefaultProtocol extends RuntimeControlsProtocol {
 	private void setStateScreenshot(State state) {
 		Shape viewPort = state.get(Tags.Shape, null);
 		if(viewPort != null){
-			state.set(Tags.ScreenshotPath, protocolUtil.getStateshot(state));
+			String stateShot = protocolUtil.getStateshot(state);
+			state.set(Tags.ScreenshotPath, stateShot);
+			if(settings.get(ConfigTags.UseOCR))
+			{
+				// find './' and replace with '\'
+				String absolutePath = System.getProperty("user.dir") + stateShot.replaceFirst("\\.\\/", "\\\\");;
+				try
+				{
+					// TODO this needs to be replaced with a intelligent wait loop which breaks when the image has been written to disk.
+					// or perhaps even better: pass the raw image data to the OCR.
+					Thread.sleep(2000);
+				}
+				catch(InterruptedException ex)
+				{
+					Thread.currentThread().interrupt();
+				}
+				// Scan the created OCR image
+				ocrController.ProcessPNG(absolutePath);
+				// TODO Use the result of OCR to validate against the widget titles shown on the screen.
+				// TODO add a keyboard shortcut to extend the spy mode/additional info mode to show the widgets titles, extracted from the windows API
+			}
 		}
 	}
 
@@ -1915,6 +1944,9 @@ public class DefaultProtocol extends RuntimeControlsProtocol {
 	private void closeTestarTestSession(){
 		//cleaning the variables started in initialize()
 		try {
+			if (settings.get(ConfigTags.UseOCR)){
+				ocrController.Destroy();
+			}
 			if (!settings.get(ConfigTags.UnattendedTests)) {
 				if (GlobalScreen.isNativeHookRegistered()) {
 					LogSerialiser.log("Unregistering keyboard and mouse hooks\n", LogSerialiser.LogLevel.Debug);
