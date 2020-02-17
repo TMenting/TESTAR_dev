@@ -50,9 +50,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.security.cert.CollectionCertStoreParameters;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.fruit.alayer.windows.UIATags;
 import org.fruit.alayer.windows.Windows10;
@@ -106,6 +104,8 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 
 		isValidJavaEnvironment();
+
+		initTagVisualization();
 
 		initTestarSSE(args);
 
@@ -684,4 +684,9 @@ public class Main {
 			Environment.setInstance(new UnknownEnvironment());
 		}
 	}
+	
+    private static void initTagVisualization() {
+		TagFilter.setInstance(new ConcreteTagFilter());
+	}
+
 }
