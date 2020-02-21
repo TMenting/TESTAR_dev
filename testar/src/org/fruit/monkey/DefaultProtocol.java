@@ -69,7 +69,6 @@ import nl.ou.testar.*;
 import nl.ou.testar.OCR.OcrController;
 import nl.ou.testar.StateModel.StateModelManager;
 import nl.ou.testar.StateModel.StateModelManagerFactory;
-import org.bytedeco.opencv.opencv_tracking.ClfOnlineStump;
 import org.fruit.Assert;
 import org.fruit.Drag;
 import org.fruit.Pair;
@@ -107,6 +106,7 @@ import org.fruit.alayer.exceptions.StateBuildException;
 import org.fruit.alayer.exceptions.SystemStartException;
 import org.fruit.alayer.exceptions.WidgetNotFoundException;
 import org.fruit.alayer.visualizers.ShapeVisualizer;
+import org.fruit.alayer.windows.UIATags;
 import org.fruit.alayer.windows.WinApiException;
 import org.fruit.monkey.RuntimeControlsProtocol.Modes;
 
@@ -1577,24 +1577,46 @@ public class DefaultProtocol extends RuntimeControlsProtocol {
 		if(viewPort != null){
 			String stateShot = protocolUtil.getStateshot(state);
 			state.set(Tags.ScreenshotPath, stateShot);
-			if(settings.get(ConfigTags.UseOCR))
-			{
+			if(settings.get(ConfigTags.UseOCR)) {
 				// find './' and replace with '\'
-				String absolutePath = System.getProperty("user.dir") + stateShot.replaceFirst("\\.\\/", "\\\\");;
-				try
-				{
+				String absolutePath = System.getProperty("user.dir") + stateShot.replaceFirst("\\.\\/", "\\\\");
+
+				try {
 					// TODO this needs to be replaced with a intelligent wait loop which breaks when the image has been written to disk.
 					// or perhaps even better: pass the raw image data to the OCR.
 					Thread.sleep(2000);
-				}
-				catch(InterruptedException ex)
-				{
+				} catch (InterruptedException ex) {
 					Thread.currentThread().interrupt();
 				}
 				// Scan the created OCR image
-				ocrController.ProcessPNG(absolutePath);
+				// TODO create a matcher class which uses the confidence level, and location of the OCR result to map
+				//  against the widgets that visualize a text and match the criteria for OCR checking
+				List<String> res = ocrController.ProcessPNG(absolutePath);
+
+				res.forEach(s -> System.out.printf("Found: %s\n", s));
+
 				// TODO Use the result of OCR to validate against the widget titles shown on the screen.
-				// TODO add a keyboard shortcut to extend the spy mode/additional info mode to show the widgets titles, extracted from the windows API
+				Matcher m;
+				for (Widget w : state) {
+					String title = w.get(Title, "");
+					if (title != null && !title.isEmpty()) {
+						System.out.println("Widget has title: " + title);
+
+//						m = this.suspiciousTitlesMatchers.get(title);
+//						if (m == null) {
+//							m = this.suspiciousTitlesPattern.matcher(title);
+//							this.suspiciousTitlesMatchers.put(title, m);
+//						}
+//						if (m.matches()) {
+//							Visualizer visualizer = Util.NullVisualizer;
+//							// visualize the problematic widget, by marking it with a red box
+//							if (w.get(Tags.Shape, null) != null) {
+//								visualizer = new ShapeVisualizer(RedPen, w.get(Tags.Shape), "Suspicious Title", 0.5, 0.5);
+//							}
+//							//return new Verdict(Verdict.SEVERITY_SUSPICIOUS_TITLE, "Discovered suspicious widget title: '" + title + "'.", visualizer);
+//						}
+					}
+				}
 			}
 		}
 	}

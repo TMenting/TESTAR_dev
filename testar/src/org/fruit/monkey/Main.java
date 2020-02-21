@@ -42,8 +42,9 @@ import es.upv.staq.testar.StateManagementTags;
 import es.upv.staq.testar.serialisation.LogSerialiser;
 import es.upv.staq.testar.serialisation.ScreenshotSerialiser;
 import es.upv.staq.testar.serialisation.TestSerialiser;
+import nl.ou.testar.TagVisualization.ConcreteTagFilter;
+import nl.ou.testar.TagVisualization.TagFilter;
 import org.fruit.*;
-import org.fruit.alayer.State;
 import org.fruit.alayer.Tag;
 
 import javax.swing.*;
@@ -52,10 +53,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
-import org.fruit.alayer.windows.UIATags;
 import org.fruit.alayer.windows.Windows10;
 
-import static java.lang.System.exit;
 import static org.fruit.monkey.ConfigTags.*;
 
 public class Main {
