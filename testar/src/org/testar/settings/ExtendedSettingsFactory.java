@@ -1,6 +1,7 @@
 package org.testar.settings;
 
 import nl.ou.testar.visualvalidation.VisualValidationSettings;
+import nl.ou.testar.visualvalidation.extractor.WidgetTextConfiguration;
 import nl.ou.testar.visualvalidation.ocr.tesseract.TesseractSettings;
 
 import java.util.ArrayList;
@@ -58,5 +59,9 @@ public class ExtendedSettingsFactory {
 
     public static TesseractSettings createTesseractSetting() {
         return createSettings(TesseractSettings.class, TesseractSettings::CreateDefault);
+    }
+
+    public static WidgetTextConfiguration createWidgetTextConfiguration() {
+        return createSettings(WidgetTextConfiguration.class, WidgetTextConfiguration::CreateDefault);
     }
 }
